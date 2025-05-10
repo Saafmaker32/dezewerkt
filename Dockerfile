@@ -1,20 +1,17 @@
-# Gebruik een image met Apache en PHP
+# Gebruik officiële PHP image met Apache
 FROM php:8.2-apache
 
-# Installeer benodigde PHP-extensies (pas aan indien nodig)
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+# Installeer MySQLi extensie voor databaseverbindingen
+RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 
-# Zet de Apache document root naar /var/www/html
-WORKDIR /var/www/html
+# Zorg dat Apache .htaccess en mod_rewrite gebruikt
+RUN a2enmod rewrite
 
-# Kopieer jouw project naar de container
-COPY html/ /var/www/html/
+# Kopieer projectbestanden naar Apache web root
+COPY . /var/www/html/
 
-# Geef schrijfrechten aan Apache (indien nodig)
-RUN chown -R www-data:www-data /var/www/html
+# Stel de werkdirectory in
+WORKDIR /var/www/html/
 
-# Zet Apache aan op poort 80
+# Open poort 80
 EXPOSE 80
-
-# Start Apache in de voorgrond
-CMD ["apache2-foreground"]
