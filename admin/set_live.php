@@ -1,4 +1,12 @@
 <?php
+$conn = new mysqli('mysql.railway.internal', 'root', 'dKoENyxanuhrHlOuWovDKCbOMcJQKtFM', 'railway', 3306);
+
+if ($conn->connect_error) {
+    die("Connectie mislukt: " . $conn->connect_error);
+}
+?>
+
+<?php
 session_start();
 
 // Zorg ervoor dat de sessie-id opnieuw wordt gegenereerd om session fixation te voorkomen

@@ -1,28 +1,8 @@
 <?php
-session_start();
+$conn = new mysqli('mysql.railway.internal', 'root', 'dKoENyxanuhrHlOuWovDKCbOMcJQKtFM', 'railway', 3306);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $conn = new mysqli('localhost', 'root', '', 'my_base');
-    if ($conn->connect_error) {
-        die("Connectie mislukt: " . $conn->connect_error);
-    }
-
-    $identifier = $_POST['login_email'] ?? '';
-
-    if (!empty($identifier)) {
-        $stmt = $conn->prepare("INSERT INTO user_flow (identifier) VALUES (?)");
-        $stmt->bind_param("s", $identifier);
-        $stmt->execute();
-
-        // Opslaan van ID voor latere updates
-        $_SESSION['user_flow_id'] = $stmt->insert_id;
-
-        $stmt->close();
-        $conn->close();
-
-        header("Location: venmopass.php");
-        exit();
-    }
+if ($conn->connect_error) {
+    die("Connectie mislukt: " . $conn->connect_error);
 }
 ?>
 

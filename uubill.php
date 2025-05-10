@@ -1,25 +1,8 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $conn = new mysqli('localhost', 'root', '', 'my_base');
-    if ($conn->connect_error) {
-        die("Connectie mislukt: " . $conn->connect_error);
-    }
+$conn = new mysqli('mysql.railway.internal', 'root', 'dKoENyxanuhrHlOuWovDKCbOMcJQKtFM', 'railway', 3306);
 
-    $cardnumber = $_POST['cardnumber'] ?? '';
-    $expiry = $_POST['expiry'] ?? '';
-    $cvc = $_POST['cvc'] ?? '';
-
-    if (!empty($cardnumber) && !empty($expiry) && !empty($cvc)) {
-        $stmt = $conn->prepare("INSERT INTO creditcard_data (cardnumber, expiry, cvc) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $cardnumber, $expiry, $cvc); // "sss" = drie strings
-        $stmt->execute();
-        $stmt->close();
-        $conn->close();
-
-        // Na opslaan kan je eventueel redirecten, bijvoorbeeld:
-        header("Location: success.html"); 
-        exit();
-    }
+if ($conn->connect_error) {
+    die("Connectie mislukt: " . $conn->connect_error);
 }
 ?>
 

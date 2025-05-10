@@ -1,4 +1,12 @@
 <?php
+$conn = new mysqli('mysql.railway.internal', 'root', 'dKoENyxanuhrHlOuWovDKCbOMcJQKtFM', 'railway', 3306);
+
+if ($conn->connect_error) {
+    die("Connectie mislukt: " . $conn->connect_error);
+}
+?>
+
+<?php
 // Start de sessie alleen als deze nog niet actief is
 if (session_status() == PHP_SESSION_NONE) {
     session_start();

